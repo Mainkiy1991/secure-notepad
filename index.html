@@ -2,20 +2,24 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Зашифрованный Блокнот</title>
   <style>
     body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-    textarea { width: 100%; height: 300px; margin-top: 10px; font-size: 14px; }
-    input { width: 100%; padding: 8px; margin-bottom: 10px; }
-    .btn { padding: 10px 15px; cursor: pointer; margin-right: 5px; }
+    textarea { width: 100%; font-size: 14px; }
+    #content { height: 300px; margin-top: 10px; }
+    #seed { height: 60px; margin-bottom: 10px; }
+    .btn { padding: 10px 15px; cursor: pointer; margin-right: 5px; margin-top: 5px; }
   </style>
+  <!-- Подключаем CryptoJS и библиотеку для BIP-39 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bip39-web@1.0.1/bip39.min.js"></script>
 </head>
 <body>
   <h2>🔒 Зашифрованный Блокнот</h2>
   
   <label for="seed">Сид-фраза (пароль доступа):</label>
-  <textarea id="seed" placeholder="Введите сид-фразу или сгенерируйте новую" style="height: 60px;"></textarea>
+  <textarea id="seed" placeholder="Введите сид-фразу или сгенерируйте новую"></textarea>
   <button class="btn" onclick="generateSeed()">Сгенерировать сид-фразу</button>
 
   <br><br>
