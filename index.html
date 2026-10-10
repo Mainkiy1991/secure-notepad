@@ -11,9 +11,10 @@
     #seed { height: 60px; margin-bottom: 10px; }
     .btn { padding: 10px 15px; cursor: pointer; margin-right: 5px; margin-top: 5px; }
   </style>
-  <!-- Подключаем CryptoJS и библиотеку для BIP-39 -->
+  <!-- Подключаем CryptoJS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bip39-web@1.0.1/bip39.min.js"></script>
+  <!-- Подключаем надежную версию bip39 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bip39/3.0.4/index.js"></script>
 </head>
 <body>
   <h2>🔒 Зашифрованный Блокнот</h2>
