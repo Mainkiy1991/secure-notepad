@@ -9,7 +9,6 @@
     input { width: 100%; padding: 8px; margin-bottom: 10px; }
     .btn { padding: 10px 15px; cursor: pointer; margin-right: 5px; }
   </style>
-  <!-- Подключаем библиотеку CryptoJS для шифрования -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
@@ -20,8 +19,8 @@
   <button class="btn" onclick="generateSeed()">Сгенерировать сид-фразу</button>
 
   <br><br>
-  <button class="btn" onclick="loadData()">Загрузить / Расшифровать</button>
-  <button class="btn" onclick="saveData()">Сохранить (Зашифровать)</button>
+  <button class="btn" onclick="loadData()">Загрузить с сервера</button>
+  <button class="btn" onclick="saveData()">Сохранить на сервер</button>
 
   <br><br>
   <textarea id="content" placeholder="Ваши секретные заметки..."></textarea>
