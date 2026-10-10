@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Зашифрованный Блокнот</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    textarea { width: 100%; height: 300px; margin-top: 10px; font-size: 14px; }
+    input { width: 100%; padding: 8px; margin-bottom: 10px; }
+    .btn { padding: 10px 15px; cursor: pointer; margin-right: 5px; }
+  </style>
+  <!-- Подключаем библиотеку CryptoJS для шифрования -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+  <h2>🔒 Зашифрованный Блокнот</h2>
+  
+  <label for="seed">Сид-фраза (пароль доступа):</label>
+  <input type="password" id="seed" placeholder="Введите сид-фразу или сгенерируйте новую">
+  <button class="btn" onclick="generateSeed()">Сгенерировать сид-фразу</button>
+
+  <br><br>
+  <button class="btn" onclick="loadData()">Загрузить / Расшифровать</button>
+  <button class="btn" onclick="saveData()">Сохранить (Зашифровать)</button>
+
+  <br><br>
+  <textarea id="content" placeholder="Ваши секретные заметки..."></textarea>
+
+  <script src="script.js"></script>
+</body>
+</html>
