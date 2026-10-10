@@ -1,14 +1,11 @@
-// Генерация сид-фразы из 12 слов
+// Генерация настоящей криптографической сид-фразы из 12 слов (BIP-39)
 function generateSeed() {
-  const words = ["apple", "banana", "river", "mountain", "cloud", "sun", "forest", "crypto", "safe", "shield", "ocean", "stone"];
-  let result = [];
-  for (let i = 0; i < 12; i++) {
-    const randomIndex = Math.floor(Math.random() * words.length);
-    result.push(words[randomIndex]);
+  if (typeof bip39 !== 'undefined') {
+    const mnemonic = bip39.generateMnemonic(); // 12 слов из 2048 стандартных
+    document.getElementById('seed').value = mnemonic;
+  } else {
+    alert("Ошибка загрузки библиотеки BIP-39, попробуйте обновить страницу.");
   }
-  const seedInput = document.getElementById('seed');
-  seedInput.type = "text"; 
-  seedInput.value = result.join(' ');
 }
 
 // Превращаем сид-фразу в уникальный хэш, чтобы сервер не знал саму фразу
