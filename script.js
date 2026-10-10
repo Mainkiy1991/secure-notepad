@@ -1,19 +1,19 @@
-// Генерация настоящей криптографической сид-фразы из 12 слов (BIP-39)
+// Генерация настоящей сид-фразы BIP-39
 function generateSeed() {
-  if (typeof bip39 !== 'undefined') {
-    const mnemonic = bip39.generateMnemonic(); // 12 слов из 2048 стандартных
+  try {
+    // В этой версии библиотеки генерация идет через bip39.generateMnemonic()
+    const mnemonic = bip39.generateMnemonic();
     document.getElementById('seed').value = mnemonic;
-  } else {
-    alert("Ошибка загрузки библиотеки BIP-39, попробуйте обновить страницу.");
+  } catch (error) {
+    console.error(error);
+    alert("Ошибка генерации сид-фразы.");
   }
 }
 
-// Превращаем сид-фразу в уникальный хэш, чтобы сервер не знал саму фразу
 function getSeedHash(seed) {
   return CryptoJS.SHA256(seed).toString();
 }
 
-// Сохранение данных на сервер
 async function saveData() {
   const seed = document.getElementById('seed').value.trim();
   const content = document.getElementById('content').value;
@@ -44,7 +44,6 @@ async function saveData() {
   }
 }
 
-// Загрузка данных с сервера
 async function loadData() {
   const seed = document.getElementById('seed').value.trim();
 
@@ -65,7 +64,6 @@ async function loadData() {
       return;
     }
 
-    // Расшифровываем текст сид-фразой
     const bytes = CryptoJS.AES.decrypt(data.encryptedData, seed);
     const originalText = bytes.toString(CryptoJS.enc.Utf8);
 
