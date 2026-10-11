@@ -1,12 +1,34 @@
-// Генерация настоящей сид-фразы BIP-39
-function generateSeed() {
+// Генерация 12-словной мнемоники BIP-39 (128 бит энтропии + 4 бита контрольной суммы).
+let bip39EnglishWords;
+
+async function generateSeed() {
   try {
-    // В этой версии библиотеки генерация идет через bip39.generateMnemonic()
-    const mnemonic = bip39.generateMnemonic();
-    document.getElementById('seed').value = mnemonic;
+    if (!window.crypto?.getRandomValues || !window.crypto?.subtle) {
+      throw new Error('Для безопасной генерации требуется HTTPS или localhost с поддержкой Web Crypto.');
+    }
+
+    if (!bip39EnglishWords) {
+      const response = await fetch('english.txt');
+      if (!response.ok) throw new Error('Не удалось загрузить локальный список слов BIP-39.');
+      bip39EnglishWords = (await response.text()).trim().split(/\s+/);
+      if (bip39EnglishWords.length !== 2048) throw new Error('Некорректный список слов BIP-39.');
+    }
+
+    const entropy = window.crypto.getRandomValues(new Uint8Array(16));
+    const digest = new Uint8Array(await window.crypto.subtle.digest('SHA-256', entropy));
+    const entropyBits = Array.from(entropy, byte => byte.toString(2).padStart(8, '0')).join('');
+    const checksumBits = digest[0].toString(2).padStart(8, '0').slice(0, 4);
+    const bits = entropyBits + checksumBits;
+    const words = [];
+
+    for (let offset = 0; offset < bits.length; offset += 11) {
+      words.push(bip39EnglishWords[parseInt(bits.slice(offset, offset + 11), 2)]);
+    }
+
+    document.getElementById('seed').value = words.join(' ');
   } catch (error) {
     console.error(error);
-    alert("Ошибка генерации сид-фразы.");
+    alert(error.message || "Ошибка генерации сид-фразы.");
   }
 }
 
