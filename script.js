@@ -32,6 +32,43 @@ async function generateSeed() {
   }
 }
 
+
+async function copySeed() {
+  const seed = document.getElementById('seed').value.trim();
+
+  if (!seed) {
+    alert('Сначала введите или сгенерируйте сид-фразу.');
+    return;
+  }
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(seed);
+    } else {
+      throw new Error('Clipboard API недоступен.');
+    }
+  } catch (error) {
+    const temporaryField = document.createElement('textarea');
+    temporaryField.value = seed;
+    temporaryField.setAttribute('readonly', '');
+    temporaryField.style.position = 'fixed';
+    temporaryField.style.opacity = '0';
+    document.body.appendChild(temporaryField);
+    temporaryField.select();
+
+    const copied = document.execCommand('copy');
+    temporaryField.remove();
+
+    if (!copied) {
+      console.error(error);
+      alert('Не удалось скопировать SEED. Выделите сид-фразу и скопируйте её вручную.');
+      return;
+    }
+  }
+
+  alert('SEED скопирован в буфер обмена.');
+}
+
 function getSeedHash(seed) {
   return CryptoJS.SHA256(seed).toString();
 }
