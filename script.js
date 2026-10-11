@@ -1,3 +1,19 @@
+let toastTimer;
+
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  if (!toast) {
+    console[type === 'error' ? 'error' : 'log'](message);
+    return;
+  }
+
+  toast.textContent = message;
+  toast.dataset.type = type;
+  toast.classList.add('is-visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 3600);
+}
+
 // Генерация 12-словной мнемоники BIP-39 (128 бит энтропии + 4 бита контрольной суммы).
 let bip39EnglishWords;
 
@@ -28,7 +44,7 @@ async function generateSeed() {
     document.getElementById('seed').value = words.join(' ');
   } catch (error) {
     console.error(error);
-    alert(error.message || "Ошибка генерации сид-фразы.");
+    showToast(error.message || 'Ошибка генерации сид-фразы.', 'error');
   }
 }
 
@@ -37,7 +53,7 @@ async function copySeed() {
   const seed = document.getElementById('seed').value.trim();
 
   if (!seed) {
-    alert('Сначала введите или сгенерируйте сид-фразу.');
+    showToast('Сначала введите или сгенерируйте сид-фразу.', 'info');
     return;
   }
 
@@ -61,12 +77,12 @@ async function copySeed() {
 
     if (!copied) {
       console.error(error);
-      alert('Не удалось скопировать SEED. Выделите сид-фразу и скопируйте её вручную.');
+      showToast('Не удалось скопировать SEED. Выделите сид-фразу и скопируйте её вручную.', 'error');
       return;
     }
   }
 
-  alert('SEED скопирован в буфер обмена.');
+  showToast('SEED скопирован в буфер обмена.');
 }
 
 function getSeedHash(seed) {
@@ -78,7 +94,7 @@ async function saveData() {
   const content = document.getElementById('content').value;
 
   if (!seed) {
-    alert("Пожалуйста, введите или сгенерируйте сид-фразу!");
+    showToast('Пожалуйста, введите или сгенерируйте сид-фразу!', 'info');
     return;
   }
 
@@ -93,13 +109,13 @@ async function saveData() {
     });
 
     if (response.ok) {
-      alert("Данные успешно зашифрованы и сохранены на сервере!");
+      showToast('Данные успешно зашифрованы и сохранены на сервере!');
     } else {
-      alert("Ошибка при сохранении.");
+      showToast('Ошибка при сохранении.', 'error');
     }
   } catch (error) {
     console.error(error);
-    alert("Ошибка соединения с сервером.");
+    showToast('Ошибка соединения с сервером.', 'error');
   }
 }
 
@@ -107,7 +123,7 @@ async function loadData() {
   const seed = document.getElementById('seed').value.trim();
 
   if (!seed) {
-    alert("Введите сид-фразу для расшифровки данных!");
+    showToast('Введите сид-фразу для расшифровки данных!', 'info');
     return;
   }
 
@@ -118,7 +134,7 @@ async function loadData() {
     const data = await response.json();
 
     if (!data.encryptedData) {
-      alert("Заметки для этой сид-фразы не найдены.");
+      showToast('Заметки для этой сид-фразы не найдены.', 'info');
       document.getElementById('content').value = "";
       return;
     }
@@ -127,14 +143,14 @@ async function loadData() {
     const originalText = bytes.toString(CryptoJS.enc.Utf8);
 
     if (!originalText) {
-      alert("Не удалось расшифровать. Возможно, неверная сид-фраза.");
+      showToast('Не удалось расшифровать. Возможно, неверная сид-фраза.', 'error');
       return;
     }
 
     document.getElementById('content').value = originalText;
-    alert("Данные успешно загружены и расшифрованы!");
+    showToast('Данные успешно загружены и расшифрованы!');
   } catch (error) {
     console.error(error);
-    alert("Ошибка при загрузке данных.");
+    showToast('Ошибка при загрузке данных.', 'error');
   }
 }
