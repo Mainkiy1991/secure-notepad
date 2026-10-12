@@ -109,3 +109,4 @@ textarea::placeholder, input::placeholder { color:#aab3c2; }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; }
 }
+.clipboard-fallback { position:fixed; top:0; left:-10000px; opacity:0; }
