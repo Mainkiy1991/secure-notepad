@@ -10,7 +10,6 @@ const MONGO_URI = process.env.MONGO_URI;
 const KDF_VERSION = 1;
 const KDF_ITERATIONS = 600000;
 const MAX_NOTES = 500;
-const rateStores = new Map();
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
@@ -39,7 +38,7 @@ function securityHeaders(req, res, next) {
   res.setHeader('Cache-Control', 'no-store');
 
   if (process.env.NODE_ENV === 'production') {
-    if (!req.secure) return res.redirect(308, req.originalUrl);
+    if (!req.secure) return res.status(426).json({ error: 'Для работы сервиса требуется HTTPS.' });
     res.setHeader('Strict-Transport-Security', 'max-age=31536000');
   }
   next();
@@ -48,22 +47,23 @@ app.use(securityHeaders);
 app.use(express.json({ limit: '256kb' }));
 
 function rateLimit(max, windowMs) {
+  const records = new Map();
   return (req, res, next) => {
     const now = Date.now();
     const key = req.ip;
-    let record = rateStores.get(key);
+    let record = records.get(key);
     if (!record || record.resetAt <= now) {
       record = { count: 0, resetAt: now + windowMs };
-      rateStores.set(key, record);
+      records.set(key, record);
     }
     record.count += 1;
     if (record.count > max) {
       res.setHeader('Retry-After', String(Math.max(1, Math.ceil((record.resetAt - now) / 1000))));
       return res.status(429).json({ error: 'Слишком много запросов. Попробуйте позже.' });
     }
-    if (rateStores.size > 10000) {
-      for (const [storedKey, stored] of rateStores) {
-        if (stored.resetAt <= now) rateStores.delete(storedKey);
+    if (records.size > 10000) {
+      for (const [storedKey, stored] of records) {
+        if (stored.resetAt <= now) records.delete(storedKey);
       }
     }
     next();
