@@ -40,13 +40,13 @@ function setSaveStatus(message, state = 'saved') {
 
 function setBusy(button, busy, busyLabel) {
   if (busy) {
-    button.dataset.originalLabel = button.textContent;
+    button.dataset.originalHtml = button.innerHTML;
     button.textContent = busyLabel;
     button.disabled = true;
   } else {
-    button.textContent = button.dataset.originalLabel || button.textContent;
+    button.innerHTML = button.dataset.originalHtml || button.innerHTML;
     button.disabled = false;
-    delete button.dataset.originalLabel;
+    delete button.dataset.originalHtml;
   }
 }
 
@@ -143,7 +143,15 @@ async function copySeed() {
 }
 
 async function sha256Hex(value) {
-  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value)));
+  const material = await crypto.subtle.importKey(
+    'raw', encoder.encode(value.normalize('NFKD')), 'PBKDF2', false, ['deriveBits']
+  );
+  const digest = new Uint8Array(await crypto.subtle.deriveBits({
+    name: 'PBKDF2',
+    salt: encoder.encode('secure-notepad-vault-id-v1'),
+    iterations: KDF_ITERATIONS,
+    hash: 'SHA-256'
+  }, material, 256));
   return Array.from(digest, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
@@ -412,6 +420,7 @@ async function deleteCurrentNote() {
   const note = activeNote();
   if (!note) return;
   if (!window.confirm('Удалить эту заметку? Это действие нельзя отменить.')) return;
+  clearTimeout(saveTimer);
   try {
     if (note.persisted) {
       await readJson(await fetch(`/api/notes/${activeSeedHash}/${note.noteId}`, { method: 'DELETE' }), 'Не удалось удалить заметку.');
@@ -451,7 +460,7 @@ async function exportBackup() {
     link.href = url;
     link.download = 'secure-notepad-backup.json';
     link.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast('Зашифрованная резервная копия скачана.');
   } catch (error) {
     console.error(error);
