@@ -69,6 +69,17 @@ function canonicalizeMnemonic(value) {
   return value.trim().toLowerCase().normalize('NFKD').split(/\s+/u).join(' ');
 }
 
+function toggleSeedVisibility() {
+  const field = $('#seed');
+  const isVisible = field.classList.toggle('is-masked') === false;
+  const label = isVisible ? 'Скрыть' : 'Показать';
+  $('#seed-visibility-label').textContent = label;
+  $('#toggle-seed-visibility').setAttribute('aria-label', `${label} сид-фразу`);
+  $('#toggle-seed-visibility').title = `${label} сид-фразу`;
+  $('#seed-eye').classList.toggle('hidden', !isVisible);
+  $('#seed-eye-off').classList.toggle('hidden', isVisible);
+}
+
 async function loadWordlist() {
   if (englishWords) return englishWords;
   const response = await fetch('/english.txt', { cache: 'no-store' });
@@ -566,6 +577,7 @@ function resetIdleTimer() {
 }
 
 function installEventHandlers() {
+  $('#toggle-seed-visibility').addEventListener('click', toggleSeedVisibility);
   $('#generate-seed').addEventListener('click', generateSeed);
   $('#copy-seed').addEventListener('click', copySeed);
   $('#open-vault').addEventListener('click', openVault);

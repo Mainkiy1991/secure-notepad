@@ -36,7 +36,14 @@
             <span class="tag">BIP-39</span>
           </div>
 
-          <label for="seed">Ваша фраза доступа</label>
+          <div class="seed-field-label">
+            <label for="seed">Ваша фраза доступа</label>
+            <button class="btn btn-soft seed-visibility" id="toggle-seed-visibility" type="button" aria-label="Скрыть сид-фразу" title="Скрыть сид-фразу">
+              <svg id="seed-eye" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="hidden" id="seed-eye-off" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A11 11 0 0 1 12 5c6.5 0 10 7 10 7a15.8 15.8 0 0 1-4 4.8"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10.8 10.8 0 0 0 3-.4"/></svg>
+              <span id="seed-visibility-label">Скрыть</span>
+            </button>
+          </div>
           <textarea id="seed" rows="3" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Введите 12 слов или создайте новую"></textarea>
 
           <div class="actions seed-actions">
