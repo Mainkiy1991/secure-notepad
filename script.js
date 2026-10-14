@@ -262,8 +262,7 @@ function setUnlockedUi(value) {
   $('#notes-card').classList.toggle('hidden', !value);
   $('#backup-actions').classList.toggle('hidden', !value);
   $('#open-vault').classList.toggle('hidden', value);
-  $('#lock-vault').classList.toggle('hidden', !value);
-  $('#delete-vault').classList.toggle('hidden', !value);
+  $('#vault-actions').classList.toggle('hidden', !value);
   $('#seed').disabled = value;
   $('#generate-seed').disabled = value;
   setSeedVisibility(!value);
