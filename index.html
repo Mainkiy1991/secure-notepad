@@ -12,7 +12,7 @@
   <div class="page">
     <header class="topbar">
       <a class="brand" href="/" aria-label="Крипто-заметка — главная">
-        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9m-4 0h4v4m-8 8 2-2m-5-1 2-2"/></svg></span>
         <span>Крипто-заметка</span>
       </a>
     </header>
@@ -20,7 +20,7 @@
     <main>
       <section class="intro" aria-labelledby="page-title">
         <div class="eyebrow">Ваше защищённое пространство</div>
-        <h1 id="page-title">Мысли остаются только вашими</h1>
+        <h1 id="page-title">Заметки шифруются до отправки</h1>
         <p>Заметки шифруются на вашем устройстве. Для расшифровки нужна сид-фраза.</p>
       </section>
 
@@ -44,6 +44,7 @@
             </button>
           </div>
           <textarea id="seed" rows="3" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Введите 12 слов или создайте новую"></textarea>
+          <div class="seed-mask hidden" id="seed-mask" aria-label="Сид-фраза скрыта" role="status" aria-live="polite">••••• ••••• ••••• ••••• ••••• ••••• ••••• ••••• ••••• ••••• ••••• •••••</div>
 
           <div class="actions seed-actions">
             <button class="btn btn-primary" id="generate-seed" type="button"><span aria-hidden="true">✦</span> Создать фразу</button>

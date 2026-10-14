@@ -69,15 +69,20 @@ function canonicalizeMnemonic(value) {
   return value.trim().toLowerCase().normalize('NFKD').split(/\s+/u).join(' ');
 }
 
-function toggleSeedVisibility() {
+function setSeedVisibility(visible) {
   const field = $('#seed');
-  const isVisible = field.classList.toggle('is-masked') === false;
-  const label = isVisible ? 'Скрыть' : 'Показать';
+  field.classList.toggle('hidden', !visible);
+  $('#seed-mask').classList.toggle('hidden', visible);
+  const label = visible ? 'Скрыть' : 'Показать';
   $('#seed-visibility-label').textContent = label;
   $('#toggle-seed-visibility').setAttribute('aria-label', `${label} сид-фразу`);
   $('#toggle-seed-visibility').title = `${label} сид-фразу`;
-  $('#seed-eye').classList.toggle('hidden', !isVisible);
-  $('#seed-eye-off').classList.toggle('hidden', isVisible);
+  $('#seed-eye').classList.toggle('hidden', !visible);
+  $('#seed-eye-off').classList.toggle('hidden', visible);
+}
+
+function toggleSeedVisibility() {
+  setSeedVisibility($('#seed').classList.contains('hidden'));
 }
 
 async function loadWordlist() {
@@ -261,6 +266,7 @@ function setUnlockedUi(value) {
   $('#delete-vault').classList.toggle('hidden', !value);
   $('#seed').disabled = value;
   $('#generate-seed').disabled = value;
+  setSeedVisibility(!value);
 }
 
 function makeLocalNote(noteId = makeId()) {
