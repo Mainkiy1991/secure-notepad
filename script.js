@@ -555,11 +555,11 @@ async function lockVault(automatic = false) {
   clearTimeout(saveTimer);
   if (dirty && !await saveCurrentNote()) {
     if (automatic) {
-      showToast('Автоблокировка отменена: изменения не удалось сохранить.', 'error');
+      showToast('Автоматическое закрытие отменено: изменения не удалось сохранить.', 'error');
       resetIdleTimer();
       return;
     }
-    if (!window.confirm('Изменения не удалось сохранить. Всё равно заблокировать хранилище и очистить экран?')) return;
+    if (!window.confirm('Изменения не удалось сохранить. Всё равно закрыть хранилище и очистить экран?')) return;
   }
   clearTimeout(idleTimer);
   activeSeed = '';
@@ -573,7 +573,7 @@ async function lockVault(automatic = false) {
   $('#note-title').value = '';
   $('#content').value = '';
   setUnlockedUi(false);
-  showToast(automatic ? 'Хранилище заблокировано после бездействия.' : 'Хранилище заблокировано.');
+  showToast(automatic ? 'Хранилище автоматически закрыто после бездействия.' : 'Хранилище закрыто.');
 }
 
 async function deleteVault() {
