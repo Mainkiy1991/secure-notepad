@@ -140,6 +140,19 @@ app.post('/api/vault', writeLimit, async (req, res) => {
   }
 });
 
+app.delete('/api/vault/:seedHash', writeLimit, async (req, res) => {
+  const { seedHash } = req.params;
+  if (!validSeedHash(seedHash)) return res.status(400).json({ error: 'Некорректный идентификатор хранилища.' });
+  try {
+    await Note.deleteMany({ seedHash });
+    await Vault.deleteOne({ seedHash });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Не удалось удалить хранилище:', error);
+    res.status(500).json({ error: 'Не удалось удалить хранилище.' });
+  }
+});
+
 app.get('/api/notes/:seedHash', readLimit, async (req, res) => {
   const { seedHash } = req.params;
   if (!validSeedHash(seedHash)) return res.status(400).json({ error: 'Некорректный идентификатор хранилища.' });

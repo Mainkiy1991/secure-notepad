@@ -258,6 +258,7 @@ function setUnlockedUi(value) {
   $('#backup-actions').classList.toggle('hidden', !value);
   $('#open-vault').classList.toggle('hidden', value);
   $('#lock-vault').classList.toggle('hidden', !value);
+  $('#delete-vault').classList.toggle('hidden', !value);
   $('#seed').disabled = value;
   $('#generate-seed').disabled = value;
 }
@@ -570,6 +571,31 @@ async function lockVault(automatic = false) {
   showToast(automatic ? 'Хранилище заблокировано после бездействия.' : 'Хранилище заблокировано.');
 }
 
+async function deleteVault() {
+  if (!unlocked) return;
+  const hasSavedNotes = notes.some(note => note.persisted);
+  const warning = hasSavedNotes
+    ? 'Будут безвозвратно удалены хранилище и все сохранённые заметки. Несохранённые изменения тоже будут потеряны.'
+    : 'Хранилище будет удалено. Несохранённые изменения тоже будут потеряны.';
+  if (!window.confirm(`${warning}\n\nСид-фразу можно будет использовать снова, чтобы создать новое хранилище.`)) return;
+  if (window.prompt('Для подтверждения введите УДАЛИТЬ:')?.trim().toUpperCase() !== 'УДАЛИТЬ') return;
+
+  const button = $('#delete-vault');
+  setBusy(button, true, 'Удаление…');
+  try {
+    await readJson(await fetch(`/api/vault/${activeSeedHash}`, { method: 'DELETE' }), 'Не удалось удалить хранилище.');
+    clearTimeout(saveTimer);
+    dirty = false;
+    await lockVault(false);
+    showToast('Хранилище и заметки удалены. Сид-фразу можно использовать снова.');
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || 'Не удалось удалить хранилище.', 'error');
+  } finally {
+    setBusy(button, false);
+  }
+}
+
 function resetIdleTimer() {
   if (!unlocked) return;
   clearTimeout(idleTimer);
@@ -582,6 +608,7 @@ function installEventHandlers() {
   $('#copy-seed').addEventListener('click', copySeed);
   $('#open-vault').addEventListener('click', openVault);
   $('#lock-vault').addEventListener('click', () => lockVault(false));
+  $('#delete-vault').addEventListener('click', deleteVault);
   $('#new-note').addEventListener('click', createNote);
   $('#save-note').addEventListener('click', () => saveCurrentNote(true));
   $('#delete-note').addEventListener('click', deleteCurrentNote);
