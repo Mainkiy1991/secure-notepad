@@ -47,8 +47,8 @@ textarea { min-height:260px; resize:vertical; padding:15px 16px; line-height:1.6
 .seed-visibility svg { width:16px; height:16px; }
 #seed { min-height:112px; }
 .seed-mask { min-height:112px; padding:15px 16px; border:1px solid var(--line); border-radius:14px; color:var(--ink); background:#fbfcfe; font-size:14px; line-height:1.65; overflow-wrap:anywhere; }
-.seed-vault-actions { display:flex; flex:0 0 100%; flex-direction:column; align-items:flex-start; gap:9px; }
-.seed-actions .seed-vault-actions .btn { width:auto; flex:0 0 auto; }
+.seed-vault-actions { display:contents; }
+.seed-actions .btn { flex:1 1 145px; }
 #delete-vault { color:#7f1d2d; }
 input { height:46px; padding:0 14px; }
 textarea:focus, input:focus { border-color:#8794f0; background:#fff; box-shadow:0 0 0 4px rgba(75,99,230,.1); }
@@ -97,7 +97,6 @@ textarea::placeholder, input::placeholder { color:#aab3c2; }
   body { padding:20px 16px 34px; }
   .topbar { margin-bottom:45px; }
   .workspace { grid-template-columns:1fr; }
-  .seed-actions .btn { flex:1 1 145px; }
   .card { padding:22px; border-radius:20px; }
 }
 @media (max-width:480px) {
